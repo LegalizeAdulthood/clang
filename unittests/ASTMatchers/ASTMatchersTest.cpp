@@ -4447,6 +4447,11 @@ TEST(TypeMatching, MatchesFunctionTypes) {
   EXPECT_TRUE(matches("void f(int i) {}", functionType()));
 }
 
+TEST(TypeMatching, MatchesFunctionProtoTypes) {
+  EXPECT_TRUE(matches("int (*f)(int);", functionProtoType()));
+  EXPECT_TRUE(matches("void f(int i);", functionProtoType()));
+}
+
 TEST(TypeMatching, MatchesParenType) {
   EXPECT_TRUE(
       matches("int (*array)[4];", varDecl(hasType(pointsTo(parenType())))));

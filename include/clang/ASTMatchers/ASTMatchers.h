@@ -4114,6 +4114,17 @@ AST_TYPE_TRAVERSE_MATCHER(hasDeducedType, getDeducedType,
 ///   matches "int (*f)(int)" and the type of "g".
 AST_TYPE_MATCHER(FunctionType, functionType);
 
+/// \brief Matches \c FunctionProtoType nodes.
+///
+/// Given
+/// \code
+///   int (*f)(int);
+///   void g();
+/// \endcode
+/// functionProtoType()
+///   matches "int (*f)(int)" and the type of "g".
+AST_TYPE_MATCHER(FunctionProtoType, functionProtoType);
+
 /// \brief Matches \c ParenType nodes.
 ///
 /// Given
