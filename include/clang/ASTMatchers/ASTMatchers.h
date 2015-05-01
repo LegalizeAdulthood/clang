@@ -168,6 +168,21 @@ const internal::VariadicDynCastAllOfMatcher<Decl, TranslationUnitDecl>
 ///   matches "typedef int X"
 const internal::VariadicDynCastAllOfMatcher<Decl, TypedefDecl> typedefDecl;
 
+/// \brief Matches the underlying type of a typedef declaration
+///
+/// Given
+/// \code
+///   typedef int X;
+///   typedef float Y;
+/// \endcode
+/// typedefDecl(hasUnderlyingType(asString("int")))
+///   matches "typedef int X"
+AST_MATCHER_P(TypedefDecl, hasUnderlyingType, internal::Matcher<QualType>,
+              InnerMatcher) {
+  QualType UnderlyingType = Node.getUnderlyingType();
+  return InnerMatcher.matches(UnderlyingType, Finder, Builder);
+}
+
 /// \brief Matches AST nodes that were expanded within the main-file.
 ///
 /// Example matches X but not Y

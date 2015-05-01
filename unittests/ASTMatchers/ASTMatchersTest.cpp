@@ -5148,6 +5148,11 @@ TEST(IsInlineMatcher, IsInline) {
                       namespaceDecl(isInline(), hasName("m"))));
 }
 
+TEST(HasUnderlyingTypeMatcher, Match) {
+  EXPECT_TRUE(matches("typedef int hasUnderlyingTypeTest;",
+                      typedefDecl(hasUnderlyingType(asString("int")))));
+}
+
 // FIXME: Figure out how to specify paths so the following tests pass on Windows.
 #ifndef LLVM_ON_WIN32
 

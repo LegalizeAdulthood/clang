@@ -249,6 +249,7 @@ RegistryMaps::RegistryMaps() {
   REGISTER_MATCHER(hasTrueExpression);
   REGISTER_MATCHER(hasTypeLoc);
   REGISTER_MATCHER(hasUnaryOperand);
+  REGISTER_MATCHER(hasUnderlyingType);
   REGISTER_MATCHER(hasUnarySelector);
   REGISTER_MATCHER(hasValueType);
   REGISTER_MATCHER(ifStmt);
