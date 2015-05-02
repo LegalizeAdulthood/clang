@@ -2966,16 +2966,24 @@ AST_MATCHER_P(FunctionDecl, hasAnyParameter,
                                     Node.param_end(), Finder, Builder);
 }
 
-/// \brief Matches \c FunctionDecls that have a specific parameter count.
+/// \brief Matches \c FunctionDecls and FunctionProtoTypes that have a specific
+/// parameter count.
 ///
 /// Given
 /// \code
 ///   void f(int i) {}
 ///   void g(int i, int j) {}
+///   void h(int i, int j);
+///   void j(int i);
 /// \endcode
 /// functionDecl(parameterCountIs(2))
-///   matches g(int i, int j) {}
-AST_MATCHER_P(FunctionDecl, parameterCountIs, unsigned, N) {
+///   matches void g(int i, int j) {}
+/// functionProtoType(parameterCountIs(2))
+///   matches void h(int i, int j)
+AST_POLYMORPHIC_MATCHER_P(parameterCountIs,
+                          AST_POLYMORPHIC_SUPPORTED_TYPES(FunctionDecl,
+                                                          FunctionProtoType),
+                          unsigned, N) {
   return Node.getNumParams() == N;
 }
 

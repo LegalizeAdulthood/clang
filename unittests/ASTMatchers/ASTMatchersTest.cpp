@@ -4450,6 +4450,7 @@ TEST(TypeMatching, MatchesFunctionTypes) {
 TEST(TypeMatching, MatchesFunctionProtoTypes) {
   EXPECT_TRUE(matches("int (*f)(int);", functionProtoType()));
   EXPECT_TRUE(matches("void f(int i);", functionProtoType()));
+  EXPECT_TRUE(matches("void f();", functionProtoType(parameterCountIs(0))));
 }
 
 TEST(TypeMatching, MatchesParenType) {
