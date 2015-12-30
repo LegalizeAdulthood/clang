@@ -4451,6 +4451,8 @@ TEST(TypeMatching, MatchesFunctionProtoTypes) {
   EXPECT_TRUE(matches("int (*f)(int);", functionProtoType()));
   EXPECT_TRUE(matches("void f(int i);", functionProtoType()));
   EXPECT_TRUE(matches("void f();", functionProtoType(parameterCountIs(0))));
+  EXPECT_TRUE(
+      matchesC("void f(void);", functionProtoType(parameterCountIs(0))));
 }
 
 TEST(TypeMatching, MatchesParenType) {
@@ -5157,9 +5159,13 @@ TEST(IsInlineMatcher, IsInline) {
 TEST(HasUnderlyingTypeMatcher, Match) {
   EXPECT_TRUE(matches("typedef int hasUnderlyingTypeTest;",
                       typedefDecl(hasUnderlyingType(asString("int")))));
+  EXPECT_TRUE(
+      matches("typedef int foo; typedef foo bar;",
+              typedefDecl(hasUnderlyingType(asString("int")), hasName("bar"))));
 }
 
-// FIXME: Figure out how to specify paths so the following tests pass on Windows.
+// FIXME: Figure out how to specify paths so the following tests pass on
+// Windows.
 #ifndef LLVM_ON_WIN32
 
 TEST(Matcher, IsExpansionInMainFileMatcher) {
