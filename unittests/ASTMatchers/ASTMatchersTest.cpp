@@ -1719,6 +1719,7 @@ TEST(Matcher, ParameterCount) {
   EXPECT_TRUE(matches("class X { void f(int i) {} };", Function1Arg));
   EXPECT_TRUE(notMatches("void f() {}", Function1Arg));
   EXPECT_TRUE(notMatches("void f(int i, int j, int k) {}", Function1Arg));
+  EXPECT_TRUE(matches("void f(int i, ...) {};", Function1Arg));
 }
 
 TEST(Matcher, References) {
@@ -4451,6 +4452,7 @@ TEST(TypeMatching, MatchesFunctionProtoTypes) {
   EXPECT_TRUE(matches("int (*f)(int);", functionProtoType()));
   EXPECT_TRUE(matches("void f(int i);", functionProtoType()));
   EXPECT_TRUE(matches("void f();", functionProtoType(parameterCountIs(0))));
+  EXPECT_TRUE(notMatchesC("void f();", functionProtoType()));
   EXPECT_TRUE(
       matchesC("void f(void);", functionProtoType(parameterCountIs(0))));
 }
@@ -5159,9 +5161,13 @@ TEST(IsInlineMatcher, IsInline) {
 TEST(HasUnderlyingTypeMatcher, Match) {
   EXPECT_TRUE(matches("typedef int hasUnderlyingTypeTest;",
                       typedefDecl(hasUnderlyingType(asString("int")))));
+  EXPECT_TRUE(matches("typedef const int T;",
+                      typedefDecl(hasUnderlyingType(asString("const int")))));
+  EXPECT_TRUE(notMatches("typedef const int T;",
+                         typedefDecl(hasUnderlyingType(asString("int")))));
   EXPECT_TRUE(
       matches("typedef int foo; typedef foo bar;",
-              typedefDecl(hasUnderlyingType(asString("int")), hasName("bar"))));
+              typedefDecl(hasUnderlyingType(asString("foo")), hasName("bar"))));
 }
 
 // FIXME: Figure out how to specify paths so the following tests pass on
