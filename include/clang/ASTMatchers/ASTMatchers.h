@@ -2966,8 +2966,8 @@ AST_MATCHER_P(FunctionDecl, hasAnyParameter,
                                     Node.param_end(), Finder, Builder);
 }
 
-/// \brief Matches \c FunctionDecls and FunctionProtoTypes that have a specific
-/// parameter count.
+/// \brief Matches \c FunctionDecls and \c FunctionProtoTypes that have a
+/// specific parameter count.
 ///
 /// Given
 /// \code
@@ -2975,11 +2975,14 @@ AST_MATCHER_P(FunctionDecl, hasAnyParameter,
 ///   void g(int i, int j) {}
 ///   void h(int i, int j);
 ///   void j(int i);
+///   void k(int x, int y, int z, ...);
 /// \endcode
 /// functionDecl(parameterCountIs(2))
 ///   matches void g(int i, int j) {}
 /// functionProtoType(parameterCountIs(2))
 ///   matches void h(int i, int j)
+/// functionProtoType(parameterCountIs(3))
+///   matches void k(int x, int y, int z, ...);
 AST_POLYMORPHIC_MATCHER_P(parameterCountIs,
                           AST_POLYMORPHIC_SUPPORTED_TYPES(FunctionDecl,
                                                           FunctionProtoType),
@@ -4130,7 +4133,8 @@ AST_TYPE_MATCHER(FunctionType, functionType);
 ///   void g();
 /// \endcode
 /// functionProtoType()
-///   matches "int (*f)(int)" and the type of "g".
+///   matches "int (*f)(int)" and the type of "g" in C++ mode.
+///   In C mode, "g" is not matched because it does not contain a prototype.
 AST_TYPE_MATCHER(FunctionProtoType, functionProtoType);
 
 /// \brief Matches \c ParenType nodes.
