@@ -1315,7 +1315,8 @@ Given
   int (*f)(int);
   void g();
 functionProtoType()
-  matches "int (*f)(int)" and the type of "g".
+  matches "int (*f)(int)" and the type of "g" in C++ mode.
+  In C mode, "g" is not matched because it does not contain a prototype.
 </pre></td></tr>
 
 
@@ -2346,34 +2347,40 @@ compiled in C mode.
 
 
 <tr><td>Matcher&lt;<a href="http://clang.llvm.org/doxygen/classclang_1_1FunctionDecl.html">FunctionDecl</a>&gt;</td><td class="name" onclick="toggle('parameterCountIs0')"><a name="parameterCountIs0Anchor">parameterCountIs</a></td><td>unsigned N</td></tr>
-<tr><td colspan="4" class="doc" id="parameterCountIs0"><pre>Matches FunctionDecls and FunctionProtoTypes that have a specific
-parameter count.
+<tr><td colspan="4" class="doc" id="parameterCountIs0"><pre>Matches FunctionDecls and FunctionProtoTypes that have a
+specific parameter count.
 
 Given
   void f(int i) {}
   void g(int i, int j) {}
   void h(int i, int j);
   void j(int i);
+  void k(int x, int y, int z, ...);
 functionDecl(parameterCountIs(2))
   matches void g(int i, int j) {}
 functionProtoType(parameterCountIs(2))
   matches void h(int i, int j)
+functionProtoType(parameterCountIs(3))
+  matches void k(int x, int y, int z, ...);
 </pre></td></tr>
 
 
 <tr><td>Matcher&lt;<a href="http://clang.llvm.org/doxygen/classclang_1_1FunctionProtoType.html">FunctionProtoType</a>&gt;</td><td class="name" onclick="toggle('parameterCountIs1')"><a name="parameterCountIs1Anchor">parameterCountIs</a></td><td>unsigned N</td></tr>
-<tr><td colspan="4" class="doc" id="parameterCountIs1"><pre>Matches FunctionDecls and FunctionProtoTypes that have a specific
-parameter count.
+<tr><td colspan="4" class="doc" id="parameterCountIs1"><pre>Matches FunctionDecls and FunctionProtoTypes that have a
+specific parameter count.
 
 Given
   void f(int i) {}
   void g(int i, int j) {}
   void h(int i, int j);
   void j(int i);
+  void k(int x, int y, int z, ...);
 functionDecl(parameterCountIs(2))
   matches void g(int i, int j) {}
 functionProtoType(parameterCountIs(2))
   matches void h(int i, int j)
+functionProtoType(parameterCountIs(3))
+  matches void k(int x, int y, int z, ...);
 </pre></td></tr>
 
 
