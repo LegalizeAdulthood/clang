@@ -1093,6 +1093,12 @@ TEST(HasType, TakesDeclMatcherAndMatchesValueDecl) {
 
 TEST(HasType, MatchesTypedefDecl) {
   EXPECT_TRUE(matches("typedef int X;", typedefDecl(hasType(asString("int")))));
+  EXPECT_TRUE(matches("typedef const int T;",
+                      typedefDecl(hasType(asString("const int")))));
+  EXPECT_TRUE(notMatches("typedef const int T;",
+                         typedefDecl(hasType(asString("int")))));
+  EXPECT_TRUE(matches("typedef int foo; typedef foo bar;",
+                      typedefDecl(hasType(asString("foo")), hasName("bar"))));
 }
 
 TEST(HasTypeLoc, MatchesDeclaratorDecls) {
@@ -5162,18 +5168,6 @@ TEST(IsInlineMatcher, IsInline) {
                       functionDecl(isInline(), hasName("f"))));
   EXPECT_TRUE(matches("namespace n { inline namespace m {} }",
                       namespaceDecl(isInline(), hasName("m"))));
-}
-
-TEST(HasUnderlyingTypeMatcher, Match) {
-  EXPECT_TRUE(matches("typedef int hasUnderlyingTypeTest;",
-                      typedefDecl(hasUnderlyingType(asString("int")))));
-  EXPECT_TRUE(matches("typedef const int T;",
-                      typedefDecl(hasUnderlyingType(asString("const int")))));
-  EXPECT_TRUE(notMatches("typedef const int T;",
-                         typedefDecl(hasUnderlyingType(asString("int")))));
-  EXPECT_TRUE(
-      matches("typedef int foo; typedef foo bar;",
-              typedefDecl(hasUnderlyingType(asString("foo")), hasName("bar"))));
 }
 
 // FIXME: Figure out how to specify paths so the following tests pass on

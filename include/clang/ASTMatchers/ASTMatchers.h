@@ -168,21 +168,6 @@ const internal::VariadicDynCastAllOfMatcher<Decl, TranslationUnitDecl>
 ///   matches "typedef int X"
 const internal::VariadicDynCastAllOfMatcher<Decl, TypedefDecl> typedefDecl;
 
-/// \brief Matches the underlying type of a typedef declaration
-///
-/// Given
-/// \code
-///   typedef int X;
-///   typedef float Y;
-/// \endcode
-/// typedefDecl(hasUnderlyingType(asString("int")))
-///   matches "typedef int X"
-AST_MATCHER_P(TypedefDecl, hasUnderlyingType, internal::Matcher<QualType>,
-              InnerMatcher) {
-  QualType UnderlyingType = Node.getUnderlyingType();
-  return InnerMatcher.matches(UnderlyingType, Finder, Builder);
-}
-
 /// \brief Matches AST nodes that were expanded within the main-file.
 ///
 /// Example matches X but not Y
@@ -2313,9 +2298,11 @@ AST_MATCHER_P_OVERLOAD(CallExpr, callee, internal::Matcher<Decl>, InnerMatcher,
 ///
 /// Example matches x (matcher = expr(hasType(cxxRecordDecl(hasName("X")))))
 ///             and z (matcher = varDecl(hasType(cxxRecordDecl(hasName("X")))))
+///             and U (matcher = typedefDecl(hasType(asString("int")))
 /// \code
 ///  class X {};
 ///  void y(X &x) { x; X z; }
+///  typedef int U;
 /// \endcode
 AST_POLYMORPHIC_MATCHER_P_OVERLOAD(
     hasType, AST_POLYMORPHIC_SUPPORTED_TYPES(Expr, TypedefDecl, ValueDecl),
@@ -2341,11 +2328,12 @@ AST_POLYMORPHIC_MATCHER_P_OVERLOAD(
 /// \endcode
 ///
 /// Usable as: Matcher<Expr>, Matcher<ValueDecl>
-AST_POLYMORPHIC_MATCHER_P_OVERLOAD(
-    hasType, AST_POLYMORPHIC_SUPPORTED_TYPES(Expr, TypedefDecl, ValueDecl),
-    internal::Matcher<Decl>, InnerMatcher, 1) {
+AST_POLYMORPHIC_MATCHER_P_OVERLOAD(hasType,
+                                   AST_POLYMORPHIC_SUPPORTED_TYPES(Expr,
+                                                                   ValueDecl),
+                                   internal::Matcher<Decl>, InnerMatcher, 1) {
   return qualType(hasDeclaration(InnerMatcher))
-      .matches(internal::getUnderlyingType<NodeType>(Node), Finder, Builder);
+      .matches(Node.getType(), Finder, Builder);
 }
 
 /// \brief Matches if the type location of the declarator decl's type matches
