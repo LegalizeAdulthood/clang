@@ -2318,9 +2318,10 @@ AST_MATCHER_P_OVERLOAD(CallExpr, callee, internal::Matcher<Decl>, InnerMatcher,
 ///  void y(X &x) { x; X z; }
 /// \endcode
 AST_POLYMORPHIC_MATCHER_P_OVERLOAD(
-    hasType, AST_POLYMORPHIC_SUPPORTED_TYPES(Expr, ValueDecl),
+    hasType, AST_POLYMORPHIC_SUPPORTED_TYPES(Expr, TypedefDecl, ValueDecl),
     internal::Matcher<QualType>, InnerMatcher, 0) {
-  return InnerMatcher.matches(Node.getType(), Finder, Builder);
+  return InnerMatcher.matches(internal::getUnderlyingType<NodeType>(Node),
+                              Finder, Builder);
 }
 
 /// \brief Overloaded to match the declaration of the expression's or value
@@ -2340,12 +2341,11 @@ AST_POLYMORPHIC_MATCHER_P_OVERLOAD(
 /// \endcode
 ///
 /// Usable as: Matcher<Expr>, Matcher<ValueDecl>
-AST_POLYMORPHIC_MATCHER_P_OVERLOAD(hasType,
-                                   AST_POLYMORPHIC_SUPPORTED_TYPES(Expr,
-                                                                   ValueDecl),
-                                   internal::Matcher<Decl>, InnerMatcher, 1) {
+AST_POLYMORPHIC_MATCHER_P_OVERLOAD(
+    hasType, AST_POLYMORPHIC_SUPPORTED_TYPES(Expr, TypedefDecl, ValueDecl),
+    internal::Matcher<Decl>, InnerMatcher, 1) {
   return qualType(hasDeclaration(InnerMatcher))
-      .matches(Node.getType(), Finder, Builder);
+      .matches(internal::getUnderlyingType<NodeType>(Node), Finder, Builder);
 }
 
 /// \brief Matches if the type location of the declarator decl's type matches

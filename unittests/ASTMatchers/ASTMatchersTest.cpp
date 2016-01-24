@@ -1091,6 +1091,10 @@ TEST(HasType, TakesDeclMatcherAndMatchesValueDecl) {
       notMatches("class X {}; void y() { X *x; }", varDecl(hasType(ClassX))));
 }
 
+TEST(HasType, MatchesTypedefDecl) {
+  EXPECT_TRUE(matches("typedef int X;", typedefDecl(hasType(asString("int")))));
+}
+
 TEST(HasTypeLoc, MatchesDeclaratorDecls) {
   EXPECT_TRUE(matches("int x;",
                       varDecl(hasName("x"), hasTypeLoc(loc(asString("int"))))));
