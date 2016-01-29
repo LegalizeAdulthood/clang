@@ -1574,6 +1574,7 @@ TEST(Function, MatchesFunctionDeclarations) {
   EXPECT_TRUE(notMatches("void f();", functionDecl(isVariadic())));
   EXPECT_TRUE(notMatchesC("void f();", functionDecl(isVariadic())));
   EXPECT_TRUE(matches("void f(...);", functionDecl(parameterCountIs(0))));
+  EXPECT_TRUE(matchesC("void f();", functionDecl(parameterCountIs(0))));
   EXPECT_TRUE(matches("void f(int, ...);", functionDecl(parameterCountIs(1))));
 }
 
